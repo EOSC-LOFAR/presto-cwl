@@ -1,5 +1,7 @@
 runs/
 .virtualenv/
+cache/
+data/GBT_Lband_PSR.fil
 *.inf
 *.mask
 *.bytemask

@@ -25,36 +25,36 @@ data/$(PULSAR):
 
 run-udocker: .virtualenv/bin/udocker
 	mkdir -p $(RUN)
-	.virtualenv/bin/cwltool --pack prefactor.cwl > $(RUN)/packed.cwl
-	cp jobs/demo.yaml $(RUN)/job.yaml
+	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
+	cp demo.yaml $(RUN)/job.yaml
 	.virtualenv/bin/cwltool \
 		--user-space-docker-cmd `pwd`/.virtualenv/bin/udocker \
 		--cachedir cache \
 		--outdir $(RUN)/results \
-		prefactor.cwl \
-		jobs/demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
+		presto.cwl \
+		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-run: data/$(SMALL)/ .virtualenv/bin/cwltool
+run: data/$(PULSAR)/ .virtualenv/bin/cwltool
 	mkdir -p $(RUN)
-	.virtualenv/bin/cwltool --pack prefactor.cwl > $(RUN)/packed.cwl
-	cp jobs/demo.yaml $(RUN)/job.yaml
+	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
+	cp demo.yaml $(RUN)/job.yaml
 	.virtualenv/bin/cwltool \
 		--cachedir cache \
 		--outdir $(RUN)/results \
 		--tmpdir-prefix `pwd`/tmp/ \
-		prefactor.cwl \
-		jobs/demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
+		presto.cwl \
+		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-toil: data/$(SMALL)/ .virtualenv/bin/cwltoil
+toil: data/$(PULSAR)/ .virtualenv/bin/cwltoil
 	mkdir -p $(RUN)/results
-	.virtualenv/bin/cwltool --pack prefactor.cwl > $(RUN)/packed.cwl
-	cp jobs/demo.yaml $(RUN)/job.yaml
+	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
+	cp demo.yaml $(RUN)/job.yaml
 	.virtualenv/bin/toil-cwl-runner \
 		--logFile $(RUN)/log \
 		--outdir $(RUN)/results \
 		--jobStore file:///$(CURDIR)/$(RUN)/jobStore \
-		prefactor.cwl \
-		jobs/demo.yaml | tee $(RUN)/output
+		presto.cwl \
+		demo.yaml | tee $(RUN)/output
 
 docker:
 	docker build . -t kernsuite/presto
