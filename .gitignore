@@ -1,0 +1,12 @@
+runs/
+.virtualenv/
+*.inf
+*.mask
+*.bytemask
+*.stats
+*.rfi
+*.ps
+*.dat
+*.fft
+*.00_ACCEL_0
+*.00_ACCEL_0.cand
