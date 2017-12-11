@@ -118,10 +118,22 @@ steps:
       downsamp: downsamp
     out: [dats, infs]
 
+  sort_dats:
+    run: steps/sort.cwl
+    in:
+      array_of_files: prepsubband/dats
+    out: [ sorted_array_of_files ]
+
+  sort_infs:
+    run: steps/sort.cwl
+    in:
+      array_of_files: prepsubband/infs
+    out: [ sorted_array_of_files ]
+
   realfft:
     run: steps/realfft.cwl
     in:
-      infile: prepsubband/dats
+      infile: sort_dats/sorted_array_of_files
     scatter: infile
     out:
       [fft]
@@ -130,7 +142,7 @@ steps:
     run: steps/accelsearch.cwl
     in:
       dat: realfft/fft
-      inf: prepsubband/infs
+      inf: sort_infs/sorted_array_of_files
       numharm: numharm
       zmax: zmax
     scatter: [dat, inf]
