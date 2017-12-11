@@ -7,6 +7,14 @@ inputs:
   dm: float
   numout: int
   time: float
+  numharm: int
+  zmax: int
+  nsub: int
+  lodm: float
+  dmstep: float
+  numdms: int
+  numout_prepsubband: int
+  downsamp: int
 
 outputs:
   bytemask:
@@ -41,6 +49,15 @@ outputs:
     type: File
     outputSource: prepdata/inf
 
+  candidates_binary:
+    type: File
+    outputSource: accelsearch/candidates_binary
+
+  candidates_text:
+    type: File
+    outputSource: accelsearch/candidates_text
+
+
 steps:
   rfifind:
     run: steps/rfifind.cwl
@@ -62,14 +79,24 @@ steps:
     out:
        [dat, inf]
 
+  accelsearch:
+    run: steps/accelsearch.cwl
+    in:
+      dat: prepdata/dat
+      inf: prepdata/inf
+      numharm: numharm
+      zmax: zmax
+    out: [candidates_binary, candidates_text]
 
-$namespaces:
-  s: http://schema.org/
-$schemas:
-  - https://schema.org/docs/schema_org_rdfa.html
-
-s:license: "https://mit-license.org/"
-s:author:
-  s:person.url: "http://orcid.org/0000-0002-6136-3724"
-
-
+  prepsubband:
+    run: steps/prepsubband.cwl
+    in:
+      infile: infile
+      mask: rfifind/mask
+      nsub: nsub
+      lodm: lodm
+      dmstep: dmstep
+      numdms: numdms
+      numout: numout_prepsubband
+      downsamp: downsamp
+    out: [test]
