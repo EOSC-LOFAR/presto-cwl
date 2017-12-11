@@ -22,6 +22,11 @@ inputs:
     inputBinding:
       position: 1
 
+  time:
+    type: float?
+    inputBinding:
+      prefix: -time
+
 arguments:
   - prefix: -o
     valueFrom: $(inputs.infile.nameroot)

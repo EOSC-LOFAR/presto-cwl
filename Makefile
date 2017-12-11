@@ -45,7 +45,7 @@ run: data/$(PULSAR) .virtualenv/bin/cwltool
 		presto.cwl \
 		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-run-no-docker: data/$(PULSAR) .virtualenv/bin/cwltool
+run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
 	cp demo.yaml $(RUN)/job.yaml

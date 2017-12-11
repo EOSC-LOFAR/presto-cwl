@@ -1,3 +1,8 @@
 infile:
   class: File
   path: data/GBT_Lband_PSR.fil
+
+time: 2.0
+nobary: true
+dm: 0.0
+numout: 53000

@@ -3,6 +3,10 @@ class: Workflow
 
 inputs:
   infile: File
+  nobary: boolean
+  dm: float
+  numout: int
+  time: float
 
 outputs:
   bytemask:
@@ -29,13 +33,34 @@ outputs:
     type: File
     outputSource: rfifind/stats
 
+  dat:
+    type: File
+    outputSource: prepdata/dat
+
+  inf:
+    type: File
+    outputSource: prepdata/inf
+
 steps:
   rfifind:
     run: steps/rfifind.cwl
     in:
+      time: time
       infile: infile
     out:
         [bytemask, inf, mask, ps, rfi, stats]
+
+  prepdata:
+    run: steps/prepdata.cwl
+    in:
+      infile: infile
+      dm: dm
+      nobary: nobary
+      numout: numout
+      stats: rfifind/stats
+      mask: rfifind/mask
+    out:
+       [dat, inf]
 
 
 $namespaces:
