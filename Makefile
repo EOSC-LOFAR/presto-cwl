@@ -34,11 +34,23 @@ run-udocker: .virtualenv/bin/udocker
 		presto.cwl \
 		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-run: data/$(PULSAR)/ .virtualenv/bin/cwltool
+run: data/$(PULSAR) .virtualenv/bin/cwltool
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
 	cp demo.yaml $(RUN)/job.yaml
 	.virtualenv/bin/cwltool \
+		--cachedir cache \
+		--outdir $(RUN)/results \
+		--tmpdir-prefix `pwd`/tmp/ \
+		presto.cwl \
+		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
+
+run-no-docker: data/$(PULSAR) .virtualenv/bin/cwltool
+	mkdir -p $(RUN)
+	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
+	cp demo.yaml $(RUN)/job.yaml
+	.virtualenv/bin/cwltool \
+		--no-container \
 		--cachedir cache \
 		--outdir $(RUN)/results \
 		--tmpdir-prefix `pwd`/tmp/ \
