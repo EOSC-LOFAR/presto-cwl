@@ -93,6 +93,7 @@ steps:
     in:
       infile: infile
       mask: rfifind/mask
+      stats: rfifind/stats
       nsub: nsub
       lodm: lodm
       dmstep: dmstep

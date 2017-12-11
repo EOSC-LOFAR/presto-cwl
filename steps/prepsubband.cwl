@@ -10,7 +10,7 @@ requirements:
 
 hints:
   DockerRequirement:
-    dockerImageId: kernsuite/prseto
+    dockerImageId: kernsuite/presto
 
 inputs:
   infile:
@@ -55,9 +55,6 @@ inputs:
 
   stats:
     type: File?
-    inputBinding:
-      prefix: -mask
-
 
 arguments:
   - prefix: -o
@@ -66,6 +63,6 @@ arguments:
 
 outputs:
   test:
-    type: File
+    type: File[]
     outputBinding:
-      glob: "*"
+      glob: "$(inputs.infile.nameroot)_*.00.dat"
