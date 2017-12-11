@@ -1,5 +1,5 @@
 .PHONY: clean run docker
-all: run
+all: run-nodocker
 SHELL=bash
 RUN := runs/run_$(shell date +%F-%H-%M-%S)
 

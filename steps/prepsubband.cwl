@@ -62,7 +62,12 @@ arguments:
 
 
 outputs:
-  test:
+  dats:
     type: File[]
     outputBinding:
       glob: "$(inputs.infile.nameroot)_*.00.dat"
+
+  infs:
+    type: File[]
+    outputBinding:
+      glob: "$(inputs.infile.nameroot)_*.00.inf"

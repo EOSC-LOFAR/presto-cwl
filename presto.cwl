@@ -1,6 +1,9 @@
 cwlVersion: v1.0
 class: Workflow
 
+requirements:
+  ScatterFeatureRequirement: {}
+
 inputs:
   infile: File
   nobary: boolean
@@ -50,12 +53,25 @@ outputs:
     outputSource: prepdata/inf
 
   candidates_binary:
-    type: File
+    type: File[]
     outputSource: accelsearch/candidates_binary
 
   candidates_text:
-    type: File
+    type: File[]
     outputSource: accelsearch/candidates_text
+
+  dats:
+    type: File[]
+    outputSource: prepsubband/dats
+
+  infs:
+    type: File[]
+    outputSource: prepsubband/infs
+
+
+  ffts:
+    type: File[]
+    outputSource: realfft/fft
 
 
 steps:
@@ -79,7 +95,7 @@ steps:
     out:
        [dat, inf]
 
-  accelsearch:
+  accelsearch_birdy:
     run: steps/accelsearch.cwl
     in:
       dat: prepdata/dat
@@ -100,4 +116,24 @@ steps:
       numdms: numdms
       numout: numout_prepsubband
       downsamp: downsamp
-    out: [test]
+    out: [dats, infs]
+
+  realfft:
+    run: steps/realfft.cwl
+    in:
+      infile: prepsubband/dats
+    scatter: infile
+    out:
+      [fft]
+
+  accelsearch:
+    run: steps/accelsearch.cwl
+    in:
+      dat: prepsubband/dats
+      inf: prepsubband/infs
+      numharm: numharm
+      zmax: zmax
+    scatter: [dat, inf]
+    scatterMethod: dotproduct
+    out: [candidates_binary, candidates_text]
+
