@@ -129,7 +129,7 @@ steps:
   accelsearch:
     run: steps/accelsearch.cwl
     in:
-      dat: prepsubband/dats
+      dat: realfft/fft
       inf: prepsubband/infs
       numharm: numharm
       zmax: zmax
