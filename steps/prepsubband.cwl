@@ -53,6 +53,11 @@ inputs:
     inputBinding:
       prefix: -mask
 
+  nobary:
+    type: boolean
+    inputBinding:
+      prefix: -nobary
+
   stats:
     type: File?
 

@@ -1,26 +1,26 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [zapbirds, -zap]
+baseCommand: [prepfold, -noxwin]
 
 hints:
   DockerRequirement:
       dockerImageId: kernsuite/presto
 
 requirements:
-  - class: InlineJavascriptRequirement
+  #- class: InlineJavascriptRequirement
   - class: InitialWorkDirRequirement
     listing:
-      - entry: $(inputs.fft)
-        writable: true
+      - entry: $(inputs.accel)
+      - entry: $(inputs.dat)
       - entry: $(inputs.inf)
 
 inputs:
-  zapfile:
+  accel:
     type: File
     inputBinding:
-      prefix: -zapfile
+      prefix: -accelfile
 
-  fft:
+  dat:
     type: File
     inputBinding:
       position: 1
@@ -28,8 +28,19 @@ inputs:
   inf:
     type: File
 
+  accelcand:
+    type: int
+    inputBinding:
+      prefix: -accelcand
+
 outputs:
-  zapped:
+  pfd:
     type: File
     outputBinding:
-      glob: $(inputs.fft.basename)
+      glob: "*.pfd"
+
+  bestprof:
+    type: File
+    outputBinding:
+      glob: "*.bestprof"
+

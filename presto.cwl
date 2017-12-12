@@ -19,67 +19,20 @@ inputs:
   numdms: int
   numout_prepsubband: int
   downsamp: int
+  accelcand: int
 
 outputs:
-  bytemask:
-    type: File
-    outputSource: rfifind/bytemask
-
-  inf:
-    type: File
-    outputSource: rfifind/inf
-
-  mask:
-    type: File
-    outputSource: rfifind/mask
-
-  ps:
-    type: File
-    outputSource: rfifind/ps
-
-  rfi:
-    type: File
-    outputSource: rfifind/rfi
-
-  stats:
-    type: File
-    outputSource: rfifind/stats
-
-  dat:
-    type: File
-    outputSource: prepdata/dat
-
-  inf:
-    type: File
-    outputSource: prepdata/inf
-
-  candidates_binary:
-    type: File
-    outputSource: accelsearch/candidates_binary
-
   candidates_text:
     type: File
     outputSource: accelsearch/candidates_text
 
-  dats:
+  pfds:
     type: File[]
-    outputSource: prepsubband/dats
+    outputSource: prepfold/pfd
 
-  infs:
+  bestprof:
     type: File[]
-    outputSource: prepsubband/infs
-
-  fft:
-    type: File
-    outputSource: realfft/fft
-
-  ffts:
-    type: File[]
-    outputSource: realfft_subbands/fft
-
-  zaplist:
-    type: File
-    outputSource: makezaplist/zaplist
+    outputSource: prepfold/bestprof
 
 
 steps:
@@ -139,6 +92,7 @@ steps:
       numdms: numdms
       numout: numout_prepsubband
       downsamp: downsamp
+      nobary: nobary
     out: [dats, infs]
 
   sort_dats:
@@ -193,4 +147,16 @@ steps:
     scatter: [dat, inf]
     scatterMethod: dotproduct
     out: [candidates_binary, candidates_text]
+
+  prepfold:
+    run: steps/prepfold.cwl
+    in:
+      accelcand: accelcand
+      accel: accelsearch_subbands/candidates_binary
+      dat: sort_dats/sorted_array_of_files
+      inf: sort_infs/sorted_array_of_files
+    scatter: [accel, dat, inf]
+    scatterMethod: dotproduct
+    out: [pfd, bestprof]
+
 

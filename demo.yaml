@@ -18,4 +18,5 @@ dmstep: 2.0
 numdms: 24
 numout_prepsubband: 132500
 downsamp: 4
+accelcand: 2
     
