@@ -2,6 +2,10 @@ infile:
   class: File
   path: data/GBT_Lband_PSR.fil
 
+birds:
+  class: File
+  path: data/Lband.birds
+ 
 time: 2.0
 nobary: true
 dm: 0.0
@@ -14,3 +18,4 @@ dmstep: 2.0
 numdms: 24
 numout_prepsubband: 132500
 downsamp: 4
+    
