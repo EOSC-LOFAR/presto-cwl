@@ -9,10 +9,10 @@ hints:
 requirements:
   - class: InitialWorkDirRequirement
     listing:
-      - entry: $(inputs.infile)
+      - entry: $(inputs.dat)
 
 inputs:
-  infile:
+  dat:
     type: File
     inputBinding:
       position: 1
@@ -45,4 +45,4 @@ outputs:
   fft:
     type: File
     outputBinding:
-      glob: $(inputs.infile.nameroot).fft
+      glob: $(inputs.dat.nameroot).fft

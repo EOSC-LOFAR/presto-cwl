@@ -6,6 +6,7 @@ requirements:
 
 inputs:
   infile: File
+  birds: File
   nobary: boolean
   dm: float
   numout: int
@@ -53,11 +54,11 @@ outputs:
     outputSource: prepdata/inf
 
   candidates_binary:
-    type: File[]
+    type: File
     outputSource: accelsearch/candidates_binary
 
   candidates_text:
-    type: File[]
+    type: File
     outputSource: accelsearch/candidates_text
 
   dats:
@@ -68,10 +69,17 @@ outputs:
     type: File[]
     outputSource: prepsubband/infs
 
+  fft:
+    type: File
+    outputSource: realfft/fft
 
   ffts:
     type: File[]
-    outputSource: realfft/fft
+    outputSource: realfft_subbands/fft
+
+  zaplist:
+    type: File
+    outputSource: makezaplist/zaplist
 
 
 steps:
@@ -95,7 +103,7 @@ steps:
     out:
        [dat, inf]
 
-  accelsearch_birdy:
+  accelsearch:
     run: steps/accelsearch.cwl
     in:
       dat: prepdata/dat
@@ -103,6 +111,21 @@ steps:
       numharm: numharm
       zmax: zmax
     out: [candidates_binary, candidates_text]
+
+  realfft:
+    run: steps/realfft.cwl
+    in:
+      dat: prepdata/dat
+    out:
+      [ fft ]
+
+  makezaplist:
+    run: steps/makezaplist.cwl
+    in:
+      inf: rfifind/inf
+      birds: birds
+    out:
+      [zaplist]
 
   prepsubband:
     run: steps/prepsubband.cwl
@@ -130,18 +153,40 @@ steps:
       array_of_files: prepsubband/infs
     out: [ sorted_array_of_files ]
 
-  realfft:
+  realfft_subbands:
     run: steps/realfft.cwl
     in:
-      infile: sort_dats/sorted_array_of_files
-    scatter: infile
+      dat: sort_dats/sorted_array_of_files
+    scatter: dat
     out:
       [fft]
 
-  accelsearch:
+  sort_subband_ffts:
+    run: steps/sort.cwl
+    in:
+      array_of_files: realfft_subbands/fft
+    out: [ sorted_array_of_files ]
+
+  zapbirds:
+    run: steps/zapbirds.cwl
+    in:
+      zapfile: makezaplist/zaplist
+      fft: sort_subband_ffts/sorted_array_of_files
+      inf: sort_infs/sorted_array_of_files
+    scatter: [fft, inf]
+    scatterMethod: dotproduct
+    out: [zapped]
+
+  sort_zapped_ffts:
+    run: steps/sort.cwl
+    in:
+      array_of_files: zapbirds/zapped
+    out: [ sorted_array_of_files ]
+
+  accelsearch_subbands:
     run: steps/accelsearch.cwl
     in:
-      dat: realfft/fft
+      dat: sort_zapped_ffts/sorted_array_of_files
       inf: sort_infs/sorted_array_of_files
       numharm: numharm
       zmax: zmax

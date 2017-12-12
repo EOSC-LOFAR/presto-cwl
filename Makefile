@@ -1,7 +1,7 @@
 .PHONY: clean run docker
 all: run-nodocker
 SHELL=bash
-RUN := runs/run_$(shell date +%F-%H-%M-%S)
+RUN := $(shell pwd)/runs/run_$(shell date +%F-%H-%M-%S)
 
 ARCHIVE=ftp://ftp.astron.nl/outgoing/EOSC/datasets/
 PULSAR=GBT_Lband_PSR.fil
@@ -53,7 +53,8 @@ run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool
 		--no-container \
 		--cachedir cache \
 		--outdir $(RUN)/results \
-		--tmpdir-prefix `pwd`/tmp/ \
+		--tmpdir-prefix $(PWD)/tmp/ \
+		--leave-tmpdir \
 		presto.cwl \
 		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
