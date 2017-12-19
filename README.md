@@ -11,6 +11,13 @@ http://www.cv.nrao.edu/~sransom/PRESTO_search_tutorial.pdf
 * A [CWL](http://www.commonwl.org/) runner (like [CWLtool](https://github.com/common-workflow-language/cwltool))
 # usage
 
+# preperations
+
+```
+$ sed -i 's/%RUN_PREFIX%//g' steps/*.cwl
+```
+
+# running
 
 To run the pipeline with the example dataset just run:
 ```bash
