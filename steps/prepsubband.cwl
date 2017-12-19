@@ -13,7 +13,7 @@ hints:
     dockerImageId: kernsuite/presto
 
 inputs:
-  infile:
+  filterbank:
     type: File
     inputBinding:
       position: 1
@@ -63,16 +63,16 @@ inputs:
 
 arguments:
   - prefix: -o
-    valueFrom: $(inputs.infile.nameroot)
+    valueFrom: $(inputs.filterbank.nameroot)
 
 
 outputs:
   dats:
     type: File[]
     outputBinding:
-      glob: "$(inputs.infile.nameroot)_*.00.dat"
+      glob: "$(inputs.filterbank.nameroot)_*.00.dat"
 
   infs:
     type: File[]
     outputBinding:
-      glob: "$(inputs.infile.nameroot)_*.00.inf"
+      glob: "$(inputs.filterbank.nameroot)_*.00.inf"

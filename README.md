@@ -1,6 +1,8 @@
 # presto-cwl
 CWL pipeline for presto
 
+This is a CWL version of the workflow described in the PRESTO tutotial:
+
 http://www.cv.nrao.edu/~sransom/PRESTO_search_tutorial.pdf
 
 # requirements

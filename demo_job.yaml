@@ -1,4 +1,4 @@
-infile:
+filterbank:
   class: File
   path: data/GBT_Lband_PSR.fil
 
