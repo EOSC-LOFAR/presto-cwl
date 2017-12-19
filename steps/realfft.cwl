@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [%RUN_PREFIX%realfft]
+baseCommand: [singularity, exec, /home/molenaar/presto-cwl/presto.simg, realfft]
 
 hints:
   DockerRequirement:

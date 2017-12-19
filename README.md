@@ -13,8 +13,14 @@ http://www.cv.nrao.edu/~sransom/PRESTO_search_tutorial.pdf
 
 # preperations
 
+for a normal run:
 ```
 $ sed -i 's/%RUN_PREFIX%//g' steps/*.cwl
+```
+
+for running using singularity for example:
+```
+sed -i 's/%RUN_PREFIX%/singularity, exec, \/home\/molenaar\/presto-cwl\/presto.simg, /g' steps/*.cwl
 ```
 
 # running

@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [%RUN_PREFIX%zapbirds, -zap]
+baseCommand: [singularity, exec, /home/molenaar/presto-cwl/presto.simg, zapbirds, -zap]
 
 hints:
   DockerRequirement:

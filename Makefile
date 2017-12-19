@@ -62,6 +62,19 @@ toil: data/$(PULSAR) .virtualenv/bin/cwltoil
 		presto.cwl \
 		demo_job.yaml | tee $(RUN)/output
 
+slurm: data/$(PULSAR) .virtualenv/bin/cwltoil presto.simg
+	mkdir -p $(RUN)/results
+	.virtualenv/bin/toil-cwl-runner \
+		--batchSystem=slurm \
+		--preserve-environment PATH \
+		--no-container \
+		--logFile $(RUN)/log \
+		--outdir $(RUN)/results \
+		--jobStore file://$(RUN)/job_store \
+		presto.cwl \
+		demo_job.yaml | tee $(RUN)/output
+
+
 docker:
 	docker build . -t kernsuite/presto
 

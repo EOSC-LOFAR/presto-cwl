@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [%RUN_PREFIX%accelsearch]
+baseCommand: [singularity, exec, /home/molenaar/presto-cwl/presto.simg, accelsearch]
 
 requirements:
   - class: InitialWorkDirRequirement

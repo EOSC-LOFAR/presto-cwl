@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [%RUN_PREFIX%makezaplist.py]
+baseCommand: [singularity, exec, /home/molenaar/presto-cwl/presto.simg, makezaplist.py]
 
 hints:
   DockerRequirement:

@@ -12,3 +12,5 @@ data/GBT_Lband_PSR.fil
 *.fft
 *.00_ACCEL_0
 *.00_ACCEL_0.cand
+slurm-*.out
+*.simg

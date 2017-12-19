@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [%RUN_PREFIX%readfile]
+baseCommand: [singularity, exec, /home/molenaar/presto-cwl/presto.simg, readfile]
 doc: Reads raw data from a binary file and displays it on stdout. 
 
 hints:
