@@ -25,30 +25,24 @@ data/$(PULSAR):
 
 run-udocker: .virtualenv/bin/udocker
 	mkdir -p $(RUN)
-	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
-	cp demo.yaml $(RUN)/job.yaml
 	.virtualenv/bin/cwltool \
 		--user-space-docker-cmd `pwd`/.virtualenv/bin/udocker \
 		--cachedir cache \
 		--outdir $(RUN)/results \
 		presto.cwl \
-		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
+		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
 run: data/$(PULSAR) .virtualenv/bin/cwltool
 	mkdir -p $(RUN)
-	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
-	cp demo.yaml $(RUN)/job.yaml
 	.virtualenv/bin/cwltool \
 		--cachedir cache \
 		--outdir $(RUN)/results \
 		--tmpdir-prefix `pwd`/tmp/ \
 		presto.cwl \
-		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
+		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
 run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool
 	mkdir -p $(RUN)
-	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
-	cp demo.yaml $(RUN)/job.yaml
 	.virtualenv/bin/cwltool \
 		--no-container \
 		--cachedir cache \
@@ -56,18 +50,17 @@ run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool
 		--tmpdir-prefix $(PWD)/tmp/ \
 		--leave-tmpdir \
 		presto.cwl \
-		demo.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
+		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-toil: data/$(PULSAR)/ .virtualenv/bin/cwltoil
+toil: data/$(PULSAR) .virtualenv/bin/cwltoil
 	mkdir -p $(RUN)/results
-	.virtualenv/bin/cwltool --pack presto.cwl > $(RUN)/packed.cwl
-	cp demo.yaml $(RUN)/job.yaml
 	.virtualenv/bin/toil-cwl-runner \
+		--no-container \
 		--logFile $(RUN)/log \
 		--outdir $(RUN)/results \
-		--jobStore file:///$(CURDIR)/$(RUN)/jobStore \
+		--jobStore file://$(RUN)/job_store \
 		presto.cwl \
-		demo.yaml | tee $(RUN)/output
+		demo_job.yaml | tee $(RUN)/output
 
 docker:
 	docker build . -t kernsuite/presto

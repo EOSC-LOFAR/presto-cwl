@@ -1,3 +1,5 @@
 cwlref-runner
 html5lib
 toil[cwl]
+boto
+pycrypto

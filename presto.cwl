@@ -5,7 +5,7 @@ requirements:
   ScatterFeatureRequirement: {}
 
 inputs:
-  infile: File
+  filterbank: File
   birds: File
   nobary: boolean
   dm: float
@@ -22,10 +22,6 @@ inputs:
   accelcand: int
 
 outputs:
-  candidates_text:
-    type: File
-    outputSource: accelsearch/candidates_text
-
   pfds:
     type: File[]
     outputSource: prepfold/pfd
@@ -40,37 +36,9 @@ steps:
     run: steps/rfifind.cwl
     in:
       time: time
-      infile: infile
+      filterbank: filterbank
     out:
         [bytemask, inf, mask, ps, rfi, stats]
-
-  prepdata:
-    run: steps/prepdata.cwl
-    in:
-      infile: infile
-      dm: dm
-      nobary: nobary
-      numout: numout
-      stats: rfifind/stats
-      mask: rfifind/mask
-    out:
-       [dat, inf]
-
-  accelsearch:
-    run: steps/accelsearch.cwl
-    in:
-      dat: prepdata/dat
-      inf: prepdata/inf
-      numharm: numharm
-      zmax: zmax
-    out: [candidates_binary, candidates_text]
-
-  realfft:
-    run: steps/realfft.cwl
-    in:
-      dat: prepdata/dat
-    out:
-      [ fft ]
 
   makezaplist:
     run: steps/makezaplist.cwl
@@ -83,7 +51,7 @@ steps:
   prepsubband:
     run: steps/prepsubband.cwl
     in:
-      infile: infile
+      filterbank: filterbank
       mask: rfifind/mask
       stats: rfifind/stats
       nsub: nsub
