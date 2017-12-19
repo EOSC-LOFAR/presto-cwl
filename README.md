@@ -23,6 +23,14 @@ for running using singularity for example:
 sed -i 's/%RUN_PREFIX%/singularity, exec, \/home\/molenaar\/presto-cwl\/presto.simg, /g' steps/*.cwl
 ```
 
+initialising the environment:
+```
+module load python
+export TOIL_SLURM_ARGS="-t 0:30:00 -p staging"
+. /nfs/home2/molenaar/spack/share/spack/setup-env.sh
+spack load node-js
+```
+
 # running
 
 To run the pipeline with the example dataset just run:
