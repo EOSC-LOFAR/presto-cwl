@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: realfft
+baseCommand: [%RUN_PREFIX%realfft]
 
 hints:
   DockerRequirement:

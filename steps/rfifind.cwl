@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: rfifind
+baseCommand: [%RUN_PREFIX%rfifind]
 doc: >
   Examines radio data for narrow and wide band interference as well as
   problems with channels

@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [prepfold, -noxwin]
+baseCommand: [%RUN_PREFIX%prepfold, -noxwin]
 
 hints:
   DockerRequirement:

@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [prepdata]
+baseCommand: [%RUN_PREFIX%prepdata]
 
 requirements:
   - class: InitialWorkDirRequirement

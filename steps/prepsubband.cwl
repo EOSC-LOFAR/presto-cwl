@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: prepsubband
+baseCommand: [%RUN_PREFIX%prepsubband]
 
 requirements:
   - class: InitialWorkDirRequirement

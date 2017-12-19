@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: accelsearch
+baseCommand: [%RUN_PREFIX%accelsearch]
 
 requirements:
   - class: InitialWorkDirRequirement

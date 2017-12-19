@@ -65,6 +65,9 @@ toil: data/$(PULSAR) .virtualenv/bin/cwltoil
 docker:
 	docker build . -t kernsuite/presto
 
+presto.simg:
+	    singularity build presto.simg docker://kernsuite/presto
+
 readfile: docker data/$(PULSAR)
 	docker run -v `pwd`:/code:ro kernsuite/presto readfile data/GBT_Lband_PSR.fil
 

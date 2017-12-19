@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [zapbirds, -zap]
+baseCommand: [%RUN_PREFIX%zapbirds, -zap]
 
 hints:
   DockerRequirement:

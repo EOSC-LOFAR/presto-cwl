@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: makezaplist.py
+baseCommand: [%RUN_PREFIX%makezaplist.py]
 
 hints:
   DockerRequirement:
