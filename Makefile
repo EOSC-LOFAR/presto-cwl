@@ -1,4 +1,4 @@
-.PHONY: clean run docker
+.PHONY: clean run docker singularity run-udocker run-nodocker
 all: run-nodocker
 SHELL=bash
 RUN := $(PWD)/runs/run_$(shell date +%F-%H-%M-%S)
@@ -7,7 +7,7 @@ ARCHIVE=ftp://ftp.astron.nl/outgoing/EOSC/datasets/
 PULSAR=GBT_Lband_PSR.fil
 
 steps/prepdata.cwl:
-	echo "Run make singularity or no-singularity first"
+	$(error "Run '$ make singularity' or '$ make no-singularity' first")
 
 .virtualenv/:
 	virtualenv -p python2 .virtualenv
@@ -27,7 +27,6 @@ data/$(PULSAR):
 	cd data && wget $(ARCHIVE)$(PULSAR)
 
 run-udocker: .virtualenv/bin/udocker steps/prepdata.cwl
-	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX//g' $i> ${i:0:-3}; done
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool \
 		--user-space-docker-cmd `pwd`/.virtualenv/bin/udocker \
@@ -37,7 +36,6 @@ run-udocker: .virtualenv/bin/udocker steps/prepdata.cwl
 		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
 run: data/$(PULSAR) .virtualenv/bin/cwltool steps/prepdata.cwl
-	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX//g' $i> ${i:0:-3}; done
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool \
 		--cachedir cache \
@@ -47,7 +45,6 @@ run: data/$(PULSAR) .virtualenv/bin/cwltool steps/prepdata.cwl
 		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
 run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool steps/prepdata.cwl
-	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX//g' $i> ${i:0:-3}; done
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool \
 		--no-container \
@@ -68,7 +65,7 @@ toil: data/$(PULSAR) .virtualenv/bin/cwltoil steps/prepdata.cwl
 		presto.cwl \
 		demo_job.yaml | tee $(RUN)/output
 
-slurm: data/$(PULSAR) .virtualenv/bin/cwltoil presto.simg
+slurm: data/$(PULSAR) .virtualenv/bin/cwltoil singularity
 	mkdir -p $(RUN)/results
 	.virtualenv/bin/toil-cwl-runner \
 		--batchSystem=slurm \
@@ -79,7 +76,6 @@ slurm: data/$(PULSAR) .virtualenv/bin/cwltoil presto.simg
 		--jobStore file://$(RUN)/job_store \
 		presto.cwl \
 		demo_job.yaml | tee $(RUN)/output
-
 
 docker:
 	docker build . -t kernsuite/presto
