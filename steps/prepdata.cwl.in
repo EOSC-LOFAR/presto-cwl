@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [singularity, exec, /home/molenaar/presto-cwl/presto.simg, prepdata]
+baseCommand: [CMD_PREFIXprepdata]
 
 requirements:
   - class: InitialWorkDirRequirement

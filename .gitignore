@@ -1,4 +1,5 @@
 runs/
+steps/*.cwl
 .virtualenv/
 cache/
 data/GBT_Lband_PSR.fil

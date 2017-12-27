@@ -64,13 +64,13 @@ steps:
     out: [dats, infs]
 
   sort_dats:
-    run: steps/sort.cwl
+    run: util/sort.cwl
     in:
       array_of_files: prepsubband/dats
     out: [ sorted_array_of_files ]
 
   sort_infs:
-    run: steps/sort.cwl
+    run: util/sort.cwl
     in:
       array_of_files: prepsubband/infs
     out: [ sorted_array_of_files ]
@@ -84,7 +84,7 @@ steps:
       [fft]
 
   sort_subband_ffts:
-    run: steps/sort.cwl
+    run: util/sort.cwl
     in:
       array_of_files: realfft_subbands/fft
     out: [ sorted_array_of_files ]
@@ -100,7 +100,7 @@ steps:
     out: [zapped]
 
   sort_zapped_ffts:
-    run: steps/sort.cwl
+    run: util/sort.cwl
     in:
       array_of_files: zapbirds/zapped
     out: [ sorted_array_of_files ]

@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [singularity, exec, /home/molenaar/presto-cwl/presto.simg, rfifind]
+baseCommand: [CMD_PREFIXrfifind]
 doc: >
   Examines radio data for narrow and wide band interference as well as
   problems with channels

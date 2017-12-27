@@ -1,10 +1,13 @@
 .PHONY: clean run docker
 all: run-nodocker
 SHELL=bash
-RUN := $(shell pwd)/runs/run_$(shell date +%F-%H-%M-%S)
-
+RUN := $(PWD)/runs/run_$(shell date +%F-%H-%M-%S)
+SINGULARITY_PREFIX=$(shell echo "singularity, exec, $(PWD)/presto.simg, " | sed -e 's/[\/&]/\\&/g')
 ARCHIVE=ftp://ftp.astron.nl/outgoing/EOSC/datasets/
 PULSAR=GBT_Lband_PSR.fil
+
+steps/prepdata.cwl:
+	echo "Run make singularity or no-singularity first"
 
 .virtualenv/:
 	virtualenv -p python2 .virtualenv
@@ -23,7 +26,8 @@ PULSAR=GBT_Lband_PSR.fil
 data/$(PULSAR):
 	cd data && wget $(ARCHIVE)$(PULSAR)
 
-run-udocker: .virtualenv/bin/udocker
+run-udocker: .virtualenv/bin/udocker steps/prepdata.cwl
+	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX//g' $i> ${i:0:-3}; done
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool \
 		--user-space-docker-cmd `pwd`/.virtualenv/bin/udocker \
@@ -32,7 +36,8 @@ run-udocker: .virtualenv/bin/udocker
 		presto.cwl \
 		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-run: data/$(PULSAR) .virtualenv/bin/cwltool
+run: data/$(PULSAR) .virtualenv/bin/cwltool steps/prepdata.cwl
+	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX//g' $i> ${i:0:-3}; done
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool \
 		--cachedir cache \
@@ -41,7 +46,8 @@ run: data/$(PULSAR) .virtualenv/bin/cwltool
 		presto.cwl \
 		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool
+run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool steps/prepdata.cwl
+	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX//g' $i> ${i:0:-3}; done
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool \
 		--no-container \
@@ -52,7 +58,7 @@ run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool
 		presto.cwl \
 		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-toil: data/$(PULSAR) .virtualenv/bin/cwltoil
+toil: data/$(PULSAR) .virtualenv/bin/cwltoil steps/prepdata.cwl
 	mkdir -p $(RUN)/results
 	.virtualenv/bin/toil-cwl-runner \
 		--no-container \
@@ -79,10 +85,11 @@ docker:
 	docker build . -t kernsuite/presto
 
 presto.simg:
-	    singularity build presto.simg docker://kernsuite/presto
+	singularity build presto.simg docker://kernsuite/presto
 
-readfile: docker data/$(PULSAR)
-	docker run -v `pwd`:/code:ro kernsuite/presto readfile data/GBT_Lband_PSR.fil
+singularity: presto.simg
+	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX/$(SINGULARITY_PREFIX)/g' $$i> $${i:0:-3}; done
 
-rfifind: docker data/$(PULSAR)
-	docker run -v `pwd`:/code:rw kernsuite/presto rfifind -time 2.0 -o Lband data/GBT_Lband_PSR.fil
+no-singularity:
+	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX//g' $$i> $${i:0:-3}; done
+
