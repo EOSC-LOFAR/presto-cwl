@@ -16,16 +16,8 @@ inputs:
   dm: float
   nobary: boolean
   numout: int
-
   numharm: int
   zmax: int
-  nsub: int
-  lodm: float
-  dmstep: float
-  numdms: int
-  numout_prepsubband: int
-  downsamp: int
-  accelcand: int
 
 outputs:
   meta:
