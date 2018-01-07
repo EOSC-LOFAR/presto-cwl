@@ -97,7 +97,7 @@ steps:
     in:
       accelcand: accelcand
       accel: accelsearch_subbands/candidates_binary
-      dat: sort_dats/sorted_array_of_files
+      dat: prepsubband/dats
       inf: prepsubband/infs 
     scatter: [accel, dat, inf]
     scatterMethod: dotproduct
