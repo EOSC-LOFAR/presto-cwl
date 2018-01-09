@@ -3,14 +3,14 @@ class: CommandLineTool
 baseCommand: [CMD_PREFIXaccelsearch]
 
 requirements:
-  - class: InitialWorkDirRequirement
+  InitialWorkDirRequirement:
     listing:
       - entry: $(inputs.dat)
       - entry: $(inputs.inf)
 
 hints:
   DockerRequirement:
-    dockerImageId: kernsuite/prseto
+    dockerImageId: kernsuite/presto
 
 inputs:
   dat:

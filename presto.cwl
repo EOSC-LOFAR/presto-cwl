@@ -63,53 +63,28 @@ steps:
       nobary: nobary
     out: [dats, infs]
 
-  sort_dats:
-    run: util/sort.cwl
-    in:
-      array_of_files: prepsubband/dats
-    out: [ sorted_array_of_files ]
-
-  sort_infs:
-    run: util/sort.cwl
-    in:
-      array_of_files: prepsubband/infs
-    out: [ sorted_array_of_files ]
-
   realfft_subbands:
     run: steps/realfft.cwl
     in:
-      dat: sort_dats/sorted_array_of_files
+      dat: prepsubband/dats
     scatter: dat
-    out:
-      [fft]
-
-  sort_subband_ffts:
-    run: util/sort.cwl
-    in:
-      array_of_files: realfft_subbands/fft
-    out: [ sorted_array_of_files ]
+    out: [fft]
 
   zapbirds:
     run: steps/zapbirds.cwl
     in:
       zapfile: makezaplist/zaplist
-      fft: sort_subband_ffts/sorted_array_of_files
-      inf: sort_infs/sorted_array_of_files
+      fft: realfft_subbands/fft
+      inf: prepsubband/infs
     scatter: [fft, inf]
     scatterMethod: dotproduct
     out: [zapped]
 
-  sort_zapped_ffts:
-    run: util/sort.cwl
-    in:
-      array_of_files: zapbirds/zapped
-    out: [ sorted_array_of_files ]
-
   accelsearch_subbands:
     run: steps/accelsearch.cwl
     in:
-      dat: sort_zapped_ffts/sorted_array_of_files
-      inf: sort_infs/sorted_array_of_files
+      dat: zapbirds/zapped
+      inf: prepsubband/infs
       numharm: numharm
       zmax: zmax
     scatter: [dat, inf]
@@ -121,10 +96,8 @@ steps:
     in:
       accelcand: accelcand
       accel: accelsearch_subbands/candidates_binary
-      dat: sort_dats/sorted_array_of_files
-      inf: sort_infs/sorted_array_of_files
+      dat: prepsubband/dats
+      inf: prepsubband/infs
     scatter: [accel, dat, inf]
     scatterMethod: dotproduct
     out: [pfd, bestprof]
-
-

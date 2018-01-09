@@ -3,7 +3,7 @@ class: CommandLineTool
 baseCommand: [CMD_PREFIXprepdata]
 
 requirements:
-  - class: InitialWorkDirRequirement
+  InitialWorkDirRequirement:
     listing:
       - entry: $(inputs.mask)
       - entry: $(inputs.stats)
