@@ -7,8 +7,7 @@ hints:
       dockerImageId: kernsuite/presto
 
 requirements:
-  #- class: InlineJavascriptRequirement
-  - class: InitialWorkDirRequirement
+  InitialWorkDirRequirement:
     listing:
       - entry: $(inputs.accel)
       - entry: $(inputs.dat)

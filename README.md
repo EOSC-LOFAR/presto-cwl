@@ -15,8 +15,8 @@ Note that this project is still very much in alpha stage and very much in flux.
 
 # preperations
 
-You first need to preprocess the CWL files since the standard
-doesn't support Singularity yet. If you want to use singularity run:
+You first need to preprocess the CWL files since no CWL runner supports
+Singularity natively yet. If you want to use singularity run:
 
 ```bash
 $ make singularity
@@ -31,8 +31,6 @@ On cartesius initialising the environment:
 ```
 module load python
 export TOIL_SLURM_ARGS="-t 0:30:00 -p staging"
-. /nfs/home2/molenaar/spack/share/spack/setup-env.sh
-spack load node-js
 ```
 
 # running

@@ -7,7 +7,7 @@ hints:
       dockerImageId: kernsuite/presto
 
 requirements:
-  - class: InitialWorkDirRequirement
+  InitialWorkDirRequirement:
     listing:
       - entry: $(inputs.dat)
 
