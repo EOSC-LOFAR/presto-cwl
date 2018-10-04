@@ -9,29 +9,9 @@ Note that this project is still very much in alpha stage and very much in flux.
 
 # requirements
 
-* [Docker](https://www.docker.com/)
 * A [CWL](http://www.commonwl.org/) runner (like [CWLtool](https://github.com/common-workflow-language/cwltool))
-# usage
+* [Docker](https://www.docker.com/) or [Singularity](https://www.sylabs.io/docs/) if you want to use containers
 
-# preperations
-
-You first need to preprocess the CWL files since no CWL runner supports
-Singularity natively yet. If you want to use singularity run:
-
-```bash
-$ make singularity
-```
-
-otherwise run:
-```bash
-$ make no-singularity
-```
-
-On cartesius initialising the environment:
-```
-module load python
-export TOIL_SLURM_ARGS="-t 0:30:00 -p staging"
-```
 
 # running
 
@@ -40,4 +20,6 @@ To run the pipeline with the example dataset just run:
 $ make run
 ```
 
-Please examine the Makefile for other targets.
+Please examine the Makefile for other targets. There are many examples in there showing how to use
+the pipeline using Toil, singularity, Docker and uDocker.
+

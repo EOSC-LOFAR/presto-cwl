@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [CMD_PREFIXprepdata]
+baseCommand: [prepdata]
 
 requirements:
   InitialWorkDirRequirement:
@@ -10,7 +10,7 @@ requirements:
 
 hints:
   DockerRequirement:
-      dockerImageId: kernsuite/presto
+      dockerPull: kernsuite/presto
 
 inputs:
   filterbank:

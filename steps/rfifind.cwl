@@ -1,13 +1,13 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [CMD_PREFIXrfifind]
+baseCommand: [rfifind]
 doc: >
   Examines radio data for narrow and wide band interference as well as
   problems with channels
 
 hints:
   DockerRequirement:
-      dockerImageId: kernsuite/presto
+      dockerPull: kernsuite/presto
 
 inputs:
   filterbank:

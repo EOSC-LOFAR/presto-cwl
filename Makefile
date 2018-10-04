@@ -1,13 +1,9 @@
-.PHONY: clean run docker singularity run-udocker run-nodocker
+.PHONY: clean run docker singularity run-udocker run-nodocker docker.image
 all: run-nodocker
 SHELL=bash
 RUN := $(PWD)/runs/run_$(shell date +%F-%H-%M-%S)
-SINGULARITY_PREFIX=$(shell echo "singularity, exec, $(PWD)/presto.simg, " | sed -e 's/[\/&]/\\&/g')
 ARCHIVE=ftp://ftp.astron.nl/outgoing/EOSC/datasets/
 PULSAR=GBT_Lband_PSR.fil
-
-steps/prepdata.cwl:
-	$(error "Run '$ make singularity' or '$ make no-singularity' first")
 
 .virtualenv/:
 	virtualenv -p python2 .virtualenv
@@ -44,7 +40,7 @@ run: data/$(PULSAR) .virtualenv/bin/cwltool steps/prepdata.cwl
 		presto.cwl \
 		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool steps/prepdata.cwl
+run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool 
 	mkdir -p $(RUN)
 	.virtualenv/bin/cwltool \
 		--no-container \
@@ -55,17 +51,16 @@ run-nodocker: data/$(PULSAR) .virtualenv/bin/cwltool steps/prepdata.cwl
 		presto.cwl \
 		demo_job.yaml > >(tee $(RUN)/output) 2> >(tee $(RUN)/log >&2)
 
-toil: data/$(PULSAR) .virtualenv/bin/cwltoil steps/prepdata.cwl
+toil: data/$(PULSAR) .virtualenv/bin/cwltoil docker.image
 	mkdir -p $(RUN)/results
 	.virtualenv/bin/toil-cwl-runner \
-		--no-container \
 		--logFile $(RUN)/log \
 		--outdir $(RUN)/results \
 		--jobStore file://$(RUN)/job_store \
 		presto.cwl \
 		demo_job.yaml | tee $(RUN)/output
 
-slurm: data/$(PULSAR) .virtualenv/bin/cwltoil singularity
+slurm: data/$(PULSAR) .virtualenv/bin/cwltoil
 	mkdir -p $(RUN)/results
 	.virtualenv/bin/toil-cwl-runner \
 		--batchSystem=slurm \
@@ -77,15 +72,15 @@ slurm: data/$(PULSAR) .virtualenv/bin/cwltoil singularity
 		presto.cwl \
 		demo_job.yaml | tee $(RUN)/output
 
-docker:
+docker.image:
 	docker build . -t kernsuite/presto
 
-presto.simg:
-	singularity build presto.simg docker://kernsuite/presto
-
-singularity: presto.simg
-	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX/$(SINGULARITY_PREFIX)/g' $$i> $${i:0:-3}; done
-
-no-singularity:
-	for i in `ls steps/*.in`; do sed 's/CMD_PREFIX//g' $$i> $${i:0:-3}; done
-
+singularity:  .virtualenv/bin/cwltool data/$(PULSAR)
+	mkdir -p $(RUN)/results
+	.virtualenv/bin/toil-cwl-runner \
+		--singularity \
+		--logFile $(RUN)/log \
+		--outdir $(RUN)/results \
+		--jobStore file://$(RUN)/job_store \
+		presto.cwl \
+		demo_job.yaml | tee $(RUN)/output

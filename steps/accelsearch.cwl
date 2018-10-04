@@ -1,6 +1,6 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [CMD_PREFIXaccelsearch]
+baseCommand: [accelsearch]
 
 requirements:
   InitialWorkDirRequirement:
@@ -10,7 +10,7 @@ requirements:
 
 hints:
   DockerRequirement:
-    dockerImageId: kernsuite/presto
+    dockerPull: kernsuite/presto
 
 inputs:
   dat:

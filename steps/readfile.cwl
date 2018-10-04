@@ -1,11 +1,11 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [CMD_PREFIXreadfile]
+baseCommand: [readfile]
 doc: Reads raw data from a binary file and displays it on stdout. 
 
 hints:
   DockerRequirement:
-      dockerImageId: kernsuite/presto
+      dockerPull: kernsuite/presto
 
 inputs:
   filterbank:

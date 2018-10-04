@@ -1,10 +1,10 @@
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: [CMD_PREFIXmakezaplist.py]
+baseCommand: [makezaplist.py]
 
 hints:
   DockerRequirement:
-      dockerImageId: kernsuite/presto
+      dockerPull: kernsuite/presto
 
 requirements:
  InitialWorkDirRequirement:
